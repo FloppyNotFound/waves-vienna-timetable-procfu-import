@@ -3,4 +3,6 @@ export interface Show {
   artistName: string;
   start: string;
   end: string;
+  venue: string;
+  showcase: string;
 }

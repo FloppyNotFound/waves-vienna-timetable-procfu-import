@@ -13,6 +13,8 @@ const toShow = (procfuShow: ProcfuShow): Show => {
 		artistName: procfuShow.name,
 		start: dates[0],
 		end: dates[1],
+		venue: procfuShow.venue,
+		showcase: procfuShow.part,
 	};
 };
 
