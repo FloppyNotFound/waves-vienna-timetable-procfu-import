@@ -7,3 +7,8 @@ compatibility_date = "2023-05-15"
 # Configuration: https://developers.cloudflare.com/workers/wrangler/configuration/#triggers
 [triggers]
 crons = ["*/30 * * * *"] # * * * * * = run every 30 minutes
+
+[[r2_buckets]]
+binding = 'WAVES_VIENNA_TIMETABLE_BUCKET' # <~ valid JavaScript variable name
+bucket_name = 'waves-vienna-timetable-bucket-prod'
+preview_bucket_name = 'waves-vienna-timetable-bucket-local'

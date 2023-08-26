@@ -25,7 +25,9 @@ const getShows = async (): Promise<string> => {
 	const jsonStr = html.substring(jsonStartIndex, jsonEndIndex);
 	const json = JSON.parse(jsonStr);
 
-	return json;
+	const shows = json.shows_timetable.shows_timetable;
+
+	return shows;
 };
 
 export { getShows };

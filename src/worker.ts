@@ -13,6 +13,7 @@
  */
 
 import { getShows } from './get-shows';
+import { putShows } from './put-shows';
 
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -23,6 +24,7 @@ export interface Env {
 	//
 	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
 	// MY_BUCKET: R2Bucket;
+	WAVES_VIENNA_TIMETABLE_BUCKET: R2Bucket;
 	//
 	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
 	// MY_SERVICE: Fetcher;
@@ -38,9 +40,11 @@ export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const shows = await getShows();
 
-		const json = JSON.stringify(shows, null, 2);
+		await putShows(env.WAVES_VIENNA_TIMETABLE_BUCKET, shows);
 
-		const response = new Response(json, {
+		const showsResponse = toShowsResponse(shows);
+
+		const response = new Response(showsResponse, {
 			headers: {
 				'content-type': 'application/json;charset=UTF-8',
 			},
@@ -55,10 +59,19 @@ export default {
 		// A Cron Trigger can make requests to other endpoints on the Internet,
 		// publish to a Queue, query a D1 Database, and much more.
 
-		const resp = await getShows();
+		const shows = await getShows();
+
+		await putShows(env.WAVES_VIENNA_TIMETABLE_BUCKET, shows);
 
 		// You could store this result in KV, write to a D1 Database, or publish to a Queue.
 		// In this template, we'll just log the result:
-		console.log(`trigger fired at ${event.cron}: ${resp}`);
+		console.log(`trigger fired at ${event.cron}: ${shows}`);
 	},
+};
+
+const toShowsResponse = (shows: string): string => {
+	const showsResp = { shows, count: shows.length };
+	const jsonResp = JSON.stringify(showsResp, null, 2);
+
+	return jsonResp;
 };
