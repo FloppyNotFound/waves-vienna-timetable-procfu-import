@@ -12,6 +12,8 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import { getShows } from './get-shows';
+
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
@@ -33,18 +35,30 @@ export interface Env {
 }
 
 export default {
+	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		const shows = await getShows();
+
+		const json = JSON.stringify(shows, null, 2);
+
+		const response = new Response(json, {
+			headers: {
+				'content-type': 'application/json;charset=UTF-8',
+			},
+		});
+
+		return response;
+	},
+
 	// The scheduled handler is invoked at the interval set in our wrangler.toml's
 	// [[triggers]] configuration.
 	async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
 		// A Cron Trigger can make requests to other endpoints on the Internet,
 		// publish to a Queue, query a D1 Database, and much more.
-		//
-		// We'll keep it simple and make an API call to a Cloudflare API:
-		let resp = await fetch('https://api.cloudflare.com/client/v4/ips');
-		let wasSuccessful = resp.ok ? 'success' : 'fail';
+
+		const resp = await getShows();
 
 		// You could store this result in KV, write to a D1 Database, or publish to a Queue.
 		// In this template, we'll just log the result:
-		console.log(`trigger fired at ${event.cron}: ${wasSuccessful}`);
+		console.log(`trigger fired at ${event.cron}: ${resp}`);
 	},
 };
