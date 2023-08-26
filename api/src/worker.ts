@@ -8,6 +8,9 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import { Show } from '../../shared/model/show';
+import { getShows } from './get-shows';
+
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
@@ -17,6 +20,7 @@ export interface Env {
 	//
 	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
 	// MY_BUCKET: R2Bucket;
+	WAVES_VIENNA_TIMETABLE_BUCKET: R2Bucket;
 	//
 	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
 	// MY_SERVICE: Fetcher;
@@ -27,6 +31,23 @@ export interface Env {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+		const shows = await getShows(env.WAVES_VIENNA_TIMETABLE_BUCKET);
+
+		const response = toShowsResponse(shows ?? []);
+
+		return response;
 	},
+};
+
+const toShowsResponse = (shows: Show[]): Response => {
+	const showsResp = { shows, count: shows.length };
+	const jsonResp = JSON.stringify(showsResp, null, 2);
+
+	const response = new Response(jsonResp, {
+		headers: {
+			'content-type': 'application/json;charset=UTF-8',
+		},
+	});
+
+	return response;
 };

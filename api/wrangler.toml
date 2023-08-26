@@ -19,6 +19,10 @@ compatibility_date = "2023-08-21"
 # [[r2_buckets]]
 # binding = "MY_BUCKET"
 # bucket_name = "my-bucket"
+[[r2_buckets]]
+binding = 'WAVES_VIENNA_TIMETABLE_BUCKET' # <~ valid JavaScript variable name
+bucket_name = 'waves-vienna-timetable-bucket-prod'
+preview_bucket_name = 'waves-vienna-timetable-bucket-local'
 
 # Bind a Queue producer. Use this binding to schedule an arbitrary task that may be processed later by a Queue consumer.
 # Docs: https://developers.cloudflare.com/queues/get-started

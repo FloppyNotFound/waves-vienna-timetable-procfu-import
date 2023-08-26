@@ -1,7 +1,7 @@
 import { ProcfuShow } from './model/procfu-show';
 import { ProcfuShowsResponse } from './model/procfu-shows-response';
 
-const getShows = async (): Promise<ProcfuShow[]> => {
+const getProcfuShows = async (): Promise<ProcfuShow[]> => {
 	const showsUrl = 'https://procfu.com/waves-2023-shows';
 
 	const res = await fetch(showsUrl, {
@@ -33,4 +33,4 @@ const getShows = async (): Promise<ProcfuShow[]> => {
 	return shows;
 };
 
-export { getShows };
+export { getProcfuShows as getShows };

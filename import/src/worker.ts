@@ -12,9 +12,10 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { getShows } from './get-shows';
+import { getShows } from './get-procfu-shows';
 import { putShows } from './put-shows';
 import { ProcfuShow } from './model/procfu-show';
+import { toShows } from './to-shows';
 
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -39,11 +40,13 @@ export interface Env {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		const shows = await getShows();
+		const procfuShows = await getShows();
+
+		const shows = toShows(procfuShows);
 
 		await putShows(env.WAVES_VIENNA_TIMETABLE_BUCKET, shows);
 
-		const response = toShowsResponse(shows);
+		const response = toShowsResponse(procfuShows);
 
 		return response;
 	},
@@ -54,7 +57,9 @@ export default {
 		// A Cron Trigger can make requests to other endpoints on the Internet,
 		// publish to a Queue, query a D1 Database, and much more.
 
-		const shows = await getShows();
+		const procfuShows = await getShows();
+
+		const shows = toShows(procfuShows);
 
 		await putShows(env.WAVES_VIENNA_TIMETABLE_BUCKET, shows);
 
