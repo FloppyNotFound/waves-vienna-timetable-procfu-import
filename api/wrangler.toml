@@ -1,4 +1,4 @@
-name = "api"
+name = "waves-vienna-timetable-api"
 main = "src/worker.ts"
 compatibility_date = "2023-08-21"
 
