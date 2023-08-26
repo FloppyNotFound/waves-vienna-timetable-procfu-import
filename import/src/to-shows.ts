@@ -7,6 +7,7 @@ export const toShows = (procfuShows: ProcfuShow[]): Show[] => {
 
 const toShow = (procfuShow: ProcfuShow): Show => {
 	return <Show>{
+		id: procfuShow.piid_act,
 		artistName: procfuShow.name,
 	};
 };

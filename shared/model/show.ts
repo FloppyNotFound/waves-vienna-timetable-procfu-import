@@ -1,3 +1,4 @@
 export interface Show {
-	artistName: string;
+  id: string;
+  artistName: string;
 }
