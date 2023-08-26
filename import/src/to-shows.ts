@@ -2,7 +2,7 @@ import { Show } from '../../shared/model/show';
 import { ProcfuShow } from './model/procfu-show';
 
 export const toShows = (procfuShows: ProcfuShow[]): Show[] => {
-	return [...procfuShows].map((show) => toShow(show));
+	return [...procfuShows].map((show) => toShow(show)).sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
 };
 
 const toShow = (procfuShow: ProcfuShow): Show => {
