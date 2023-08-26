@@ -49,5 +49,11 @@ const toShowsResponse = (shows: Show[]): Response => {
 		},
 	});
 
+	console.warn('do not forget to set allow origin');
+	response.headers.set(
+		'Access-Control-Allow-Origin',
+		'*' //"https://waves-vienna-timetable.pages.dev"
+	);
+
 	return response;
 };
