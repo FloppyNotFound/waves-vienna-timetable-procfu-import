@@ -14,6 +14,7 @@
 
 import { getShows } from './get-shows';
 import { putShows } from './put-shows';
+import { ProcfuShow } from './model/procfu-show';
 
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -42,13 +43,7 @@ export default {
 
 		await putShows(env.WAVES_VIENNA_TIMETABLE_BUCKET, shows);
 
-		const showsResponse = toShowsResponse(shows);
-
-		const response = new Response(showsResponse, {
-			headers: {
-				'content-type': 'application/json;charset=UTF-8',
-			},
-		});
+		const response = toShowsResponse(shows);
 
 		return response;
 	},
@@ -69,9 +64,15 @@ export default {
 	},
 };
 
-const toShowsResponse = (shows: string): string => {
+const toShowsResponse = (shows: ProcfuShow[]): Response => {
 	const showsResp = { shows, count: shows.length };
 	const jsonResp = JSON.stringify(showsResp, null, 2);
 
-	return jsonResp;
+	const response = new Response(jsonResp, {
+		headers: {
+			'content-type': 'application/json;charset=UTF-8',
+		},
+	});
+
+	return response;
 };

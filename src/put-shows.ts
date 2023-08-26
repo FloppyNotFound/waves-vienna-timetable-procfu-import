@@ -1,5 +1,8 @@
-const putShows = async (bucket: R2Bucket, jsonResp: string): Promise<R2Object | null> => {
-	return await bucket.put(`shows`, jsonResp);
+import { ProcfuShow } from './model/procfu-show';
+
+const putShows = async (bucket: R2Bucket, shows: ProcfuShow[]): Promise<R2Object | null> => {
+	const showsSerialized = JSON.stringify(shows);
+	return await bucket.put(`shows`, showsSerialized);
 };
 
 export { putShows };

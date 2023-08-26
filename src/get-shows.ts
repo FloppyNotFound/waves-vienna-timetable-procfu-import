@@ -1,4 +1,7 @@
-const getShows = async (): Promise<string> => {
+import { ProcfuShow } from './model/procfu-show';
+import { ProcfuShowsResponse } from './model/procfu-shows-response';
+
+const getShows = async (): Promise<ProcfuShow[]> => {
 	const showsUrl = 'https://procfu.com/waves-2023-shows';
 
 	const res = await fetch(showsUrl, {
@@ -23,7 +26,7 @@ const getShows = async (): Promise<string> => {
 	const jsonEndIndex = html.indexOf(jsonEndStr) + jsonEndStr.length;
 
 	const jsonStr = html.substring(jsonStartIndex, jsonEndIndex);
-	const json = JSON.parse(jsonStr);
+	const json = <ProcfuShowsResponse>JSON.parse(jsonStr);
 
 	const shows = json.shows_timetable.shows_timetable;
 
